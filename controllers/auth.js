@@ -56,7 +56,7 @@ exports.postLogin = (req, res, next) => {
             else{
                 return req.session.save(err => {
                 console.log(err);
-                res.redirect('/user');
+                res.redirect('/Nuser');
               });
             }
           }
@@ -74,6 +74,7 @@ exports.postLogin = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+  const sex = req.body.sex;
   const confirmPassword = req.body.confirmPassword;
   User.findOne({ email: email })
     .then(userDoc => {
@@ -88,7 +89,8 @@ exports.postSignup = (req, res, next) => {
             email: email,
             password: hashedPassword,
             admin: true,
-            status: { items: [] }
+            sex: sex,
+            HoursWorked: []
           });
           return user.save();
         })
