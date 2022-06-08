@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { stringify } = require('nodemon/lib/utils');
 
 const Schema = mongoose.Schema;
 
@@ -15,14 +16,12 @@ const userSchema = new Schema({
     type: Boolean,
     required:true
   },
+  sex:{
+    type: String,
+  },
   status: {
     items: [
       {
-        infoId: {
-          type: Schema.Types.ObjectId,
-          ref: 'info',
-          required: true
-        },
         Hours_worked:{
           type: Number,
           min:0,
@@ -34,19 +33,19 @@ const userSchema = new Schema({
   }
 });
 
-userSchema.methods.addTostatus = function(status) {
-  const statusInfoIndex = this.status.items.findIndex(cp => {
-    return cp.infoId.toString() === status._id.toString();
+userSchema.methods.addTostatus = function(item) {
+  const itemInfoIndex = this.status.items.findIndex(cp => {
+    return cp.infoId.toString() === item._id.toString();
   });
   let newQuantity = 1;
   const updatedstatusItems = [...this.status.items];
 
-  if (statusInfoIndex >= 0) {
-    newQuantity = this.status.items[statusInfoIndex].quantity + 1;
-    updatedstatusItems[statusInfoIndex].quantity = newQuantity;
+  if (itemInfoIndex >= 0) {
+    newQuantity = this.status.items[itemInfoIndex].quantity + 1;
+    updatedstatusItems[itemInfoIndex].quantity = newQuantity;
   } else {
     updatedstatusItems.push({
-      infoId: status._id,
+      infoId: item._id,
       quantity: newQuantity
     });
   }
@@ -69,5 +68,10 @@ userSchema.methods.clearstatus = function() {
   this.status = { items: [] };
   return this.save();
 };
+
+
+
+
+
 
 module.exports = mongoose.model('User', userSchema);

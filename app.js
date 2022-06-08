@@ -1,5 +1,4 @@
 const path = require('path');
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -7,7 +6,6 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
-
 const User = require('./models/user');
 
 const MONGODB_URI =
@@ -18,6 +16,7 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
 });
+
 const csrfProtection = csrf();
 
 app.set('view engine', 'ejs');
@@ -25,6 +24,7 @@ app.set('views', 'views');
 
 
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin')
 const root = require('./util/root');
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -59,11 +59,26 @@ app.use((req, res, next) => {
 });
 
 
+app.get('/mydb', (req, res, next)=>{
+  User.find().exec()
+    .then(doc =>{
+      res.status(200).json(doc);
+    })
+    .catch(err=>{
+      console.log(err);
+      res.status(500).json({error:err})
+    })
+})      
+
+
+app.use(adminRoutes);
+
 app.use(authRoutes);
+
 
 app.get('/', (req,res,next)=>{
   res.sendFile(root+'/views/index.html');
-})
+});
 
 
 

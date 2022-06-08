@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>ZingGrid: Blank Grid</title>
+  <script nonce="undefined" src="https://cdn.zinggrid.com/dev/zinggrid-dev.min.js"></script>
+  <style>
+    body {
+      background: #e6e6e6;
+    }
+ 
+    zing-grid[loading] {
+      height: 456px;
+    }
+  </style>
+</head>
+ 
+<body>
+ 
+    <zing-grid caption ="Users">
+        <zg-data src="http://localhost:3000/mydb"></zg-data>
+    </zing-grid>
+
+    <section>
+      <h1>User management</h1>
+      <form class="User_management" action="/admin/usermanage" method="POST">
+        <div>
+            <label for="email">User E-Mail</label>
+            <input type="email" name="email" id="email">
+        </div>
+        <div>
+            <label for="Hours_worked">add Hours worked</label>
+            <input type="text" name="Hours_worked" id="Hours_worked">
+        </div>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button class="btn" type="submit">Add Hours_worked to this user</button>
+    </form>
+    </section>
+</body>
+ 
+</html>
