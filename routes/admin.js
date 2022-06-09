@@ -14,9 +14,11 @@ router.post('/admin/clearstatus', dashboardController.clearUserStatus);
 router.post('/admin/addingHours', dashboardController.PostAddItem);
 router.post('/admin/adduser', dashboardController.postAddUser);
 
-router.get('/admin', (req, res, next)=>{
-    res.sendFile(root+'/views/dashboard_admin.html');
+router.get('/admin/detailedreport', (req, res, next)=>{
+    res.render('metricname');
 })
+
+router.get('/admin', dashboardController.getDashboard);
 
 
 module.exports = router;

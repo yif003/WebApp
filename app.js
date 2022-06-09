@@ -8,6 +8,12 @@ const csrf = require('csurf');
 const flash = require('connect-flash');
 const User = require('./models/user');
 
+//routes
+const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin')
+const normalRoutes = require('./routes/Nuser');
+
+//mongoose, sessions, protection, utilities
 const MONGODB_URI =
   'mongodb+srv://yif003:Apple007@cluster0.16nk6.mongodb.net/?retryWrites=true&w=majority';
 
@@ -22,10 +28,8 @@ const csrfProtection = csrf();
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-
-const authRoutes = require('./routes/auth');
-const adminRoutes = require('./routes/admin')
 const root = require('./util/root');
+const { application } = require('express');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -59,6 +63,8 @@ app.use((req, res, next) => {
 });
 
 
+
+//routes control
 app.get('/mydb', (req, res, next)=>{
   User.find().exec()
     .then(doc =>{
@@ -70,6 +76,7 @@ app.get('/mydb', (req, res, next)=>{
     })
 })      
 
+app.use(normalRoutes);
 
 app.use(adminRoutes);
 

@@ -138,3 +138,7 @@ exports.updateUser = (req, res, next)=>{
             res.redirect('/admin/usermanage');
         })
 }
+
+exports.getDashboard = (req, res, next)=>{
+    res.render('dashboard_admin');
+}

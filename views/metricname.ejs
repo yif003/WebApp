@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script nonce="undefined" src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script nonce="undefined" src="https://cdn.zinggrid.com/dev/zinggrid-dev.min.js"></script>
+    <title>Detail report</title>
+    <link rel="stylesheet" href="/report.css">
+    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="/home.css">
+</head>
+
+<body>
+    <main>
+        <nav>
+            <form action="/logout" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+
+        <div>
+            <h1 style="text-align: center;">Report</h1>
+            <div>
+                <div class="charts">
+                    <div id='myChart'></div>
+                    <div class="description">
+                        <h2>Who is the most hardworking one?</h2>
+                        <p>
+                            The data shows the working hours of a user. This demonstrates how we can use web
+                            applications to manage, store user data and visualize data.
+                            We can easily track their efficiency and time devotion into work. The bar chart left displays the
+                            detail daily working time, with x axis being hours, y axis being days worked.
+                            From the grid we can see the who this worker is, and we can refresh to display a other users.
+                            The objective here is to show how data
+                            can be compared with different users, so we can find see their general statistics, and extract as much information as possible from the data.
+                            In the end, We can take note who is working hard.
+                        </p>
+                    </div>
+                </div>
+                <div id='grid1'></div>
+                
+
+            </div>
+
+        </div>
+
+    </main>
+    <script>
+        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+        fetch('http://localhost:3000/mydb')
+            .then(response => response.json())
+            .then(data => {
+                let item = {};
+                let text = [];
+                let index = Math.floor(Math.random() * data.length);
+                item.values = data[index].HoursWorked;
+                item.text = 'random user';
+                text.push(item);
+                console.log(text);
+
+
+
+                var myConfig = {
+                    "type": "bar",
+                    "background-color": "white",
+                    "title": {
+                        "text": "Daily Work Hours of a random User",
+                        "font-color": "#7E7E7E",
+                        "backgroundColor": "none",
+                        "font-size": "22px",
+                        "alpha": 1,
+                        "adjust-layout": true,
+                    },
+                    "legend": {
+                        "layout": "x3",
+                        "overflow": "page",
+                        "alpha": 0.05,
+                        "shadow": false,
+                        "align": "center",
+                        "adjust-layout": true,
+                        "marker": {
+                            "type": "circle",
+                            "border-color": "none",
+                            "size": "10px"
+                        }
+                    },
+                    "scale-y": {
+                        "item": {
+                            "font-color": "#7e7e7e"
+                        },
+                        "guide": {
+                            "visible": true
+                        },
+                        "label": {
+                            "text": "Hours",
+                            "font-family": "arial",
+                            "bold": true,
+                            "font-size": "14px",
+                            "font-color": "#7E7E7E",
+                        }
+                    },
+                    "plot": {
+                        "alpha": 0.7,
+                        "border-width": 2,
+                        "border-color": "black",
+                        "border-radius-top-left": 5,
+                        "border-radius-top-right": 5,
+                        "hoverState": {
+                            "backgroundColor": "#909090"
+                        }
+                    },
+                    "series": text
+                }
+
+                let gridConfig = {
+                    caption: 'User Status',
+                    data: [
+                        {
+                            "email": data[index].email,
+                            "sex": data[index].sex,
+                            "admin": data[index].admin,
+                            "workHours": data[index].HoursWorked
+                        },
+                    ]
+                };
+                let grid = new ZingGrid(document.querySelector('#grid1'), gridConfig);
+                zingchart.render({
+                    id: 'myChart',
+                    data: myConfig,
+                    height: 400,
+                    width: 600
+                });
+
+            });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script nonce="undefined" src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script nonce="undefined" src="https://cdn.zinggrid.com/dev/zinggrid-dev.min.js"></script>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="/home.css">
+</head>
+
+<body>
+    <nav>
+        <div>
+            <a href="#myChart">Chart</a>
+            <a href="#myChart2">Chart 2</a>
+            <a href="#">Grid</a>
+            <a href="/Nuser/detailedreport">Detailed Report</a>
+        </div>
+        <form action="/logout" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+    <h1>Welcome</h1>
+    <main>
+
+
+        <zing-grid caption="Users">
+            <zg-data src="http://localhost:3000/mydb"></zg-data>
+        </zing-grid>
+
+        <div id='myChart'></div>
+        <div id='myChart2'></div>
+        <div id='myChart3'></div>
+    </main>
+    <script>
+        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+        fetch('http://localhost:3000/mydb')
+            .then(response => response.json())
+            .then(data => {
+                //chart 1
+                let arr = [];
+                let text = [];
+                let num = 0;
+                let num_female = [];
+                let num_male = [];
+                data.forEach(function (user, index) {
+                    arr.push(user.HoursWorked.reduce((a, b) => a + b, 0) / (user.HoursWorked.length));
+                })
+                data.forEach(function (user, index) {
+                    let value = {}
+                    let a = []
+                    a.push(arr[index]);
+                    value.values = a;
+                    value.text = user.email.toString();
+                    text.push(value);
+                })
+
+                //chart 2
+                data.forEach(function (user, index) {
+                    if (user.sex === 'female') {
+                        num += 1;
+                    }
+                })
+                num_female.push(num);
+                num_male.push(data.length - num);
+                
+                //chart 3
+                let female_work = {};
+                let female_data = [];
+                let male_work = {};
+                let male_data = [];
+                
+                data.forEach(function (user, index) {
+                    if(user.sex === 'female'){
+                        female_data.push(arr[index]);
+                    }
+                    if(user.sex === 'male'){
+                        male_data.push(arr[index]);
+                    }
+                })
+                let a = [];
+                let b = [];
+                a.push(female_data.reduce((c,d)=>c+d,0)/female_data.length);
+                b.push(male_data.reduce((c,d)=>c+d,0)/male_data.length);
+                female_work.values = a;
+                male_work.values = b;
+                female_work.text = "female average work hours";
+                male_work.text = "male average work hours";
+
+                var myConfig = {
+                    "type": "bar",
+                    "background-color": "white",
+                    "title": {
+                        "text": "Average Daily Work Hours of Users",
+                        "font-color": "#7E7E7E",
+                        "backgroundColor": "none",
+                        "font-size": "22px",
+                        "alpha": 1,
+                        "adjust-layout": true,
+                    },
+                    "legend": {
+                        "layout": "x3",
+                        "overflow": "page",
+                        "alpha": 0.05,
+                        "shadow": false,
+                        "align": "center",
+                        "adjust-layout": true,
+                        "marker": {
+                            "type": "circle",
+                            "border-color": "none",
+                            "size": "10px"
+                        }
+                    },
+                    "scale-y": {
+                        "item": {
+                            "font-color": "#7e7e7e"
+                        },
+                        "guide": {
+                            "visible": true
+                        },
+                        "label": {
+                            "text": "Hours",
+                            "font-family": "arial",
+                            "bold": true,
+                            "font-size": "14px",
+                            "font-color": "#7E7E7E",
+                        }
+                    },
+                    "plot": {
+                        "alpha": 0.7,
+                        "border-width": 2,
+                        "border-color": "black",
+                        "border-radius-top-left": 5,
+                        "border-radius-top-right": 5,
+                        "hoverState": {
+                            "backgroundColor": "#909090"
+                        }
+                    },
+                    "series": text
+                }
+
+                var myConfig2 = {
+                    type: "pie",
+                    plot: {
+                        borderColor: "#2B313B",
+                        borderWidth: 1,
+                        valueBox: {
+                            placement: 'out',
+                            text: '%t\n%npv%',
+                            fontFamily: "Open Sans"
+                        },
+                        tooltip: {
+                            fontSize: '18',
+                            fontFamily: "Open Sans",
+                            padding: "5 10",
+                            text: "%npv%"
+                        },
+                        animation: {
+                            effect: 2,
+                            method: 5,
+                            speed: 900,
+                            sequence: 1,
+                            delay: 3000
+                        }
+                    },
+                    title: {
+                        fontColor: "#8e99a9",
+                        text: 'Percentage of Gender',
+                        align: "left",
+                        offsetX: 10,
+                        fontFamily: "Open Sans",
+                        fontSize: 25
+                    },
+                    series: [
+                        {
+                            values: num_female,
+                            text: "percentage of female user",
+
+                        },
+                        {
+                            values: num_male,
+                            text: "percentage of male user",
+
+                        }
+                    ]
+
+                }
+                
+                var myConfig2 = {
+                    type: "pie",
+                    plot: {
+                        borderColor: "#2B313B",
+                        borderWidth: 1,
+                        valueBox: {
+                            placement: 'out',
+                            text: '%t\n%npv%',
+                            fontFamily: "Open Sans"
+                        },
+                        tooltip: {
+                            fontSize: '18',
+                            fontFamily: "Open Sans",
+                            padding: "5 10",
+                            text: "%npv%"
+                        },
+                        animation: {
+                            effect: 2,
+                            method: 5,
+                            speed: 900,
+                            sequence: 1,
+                            delay: 3000
+                        }
+                    },
+                    title: {
+                        fontColor: "#8e99a9",
+                        text: 'Percentage of Gender',
+                        align: "left",
+                        offsetX: 10,
+                        fontFamily: "Open Sans",
+                        fontSize: 25
+                    },
+                    series: [
+                        {
+                            values: num_female,
+                            text: "percentage of female user",
+
+                        },
+                        {
+                            values: num_male,
+                            text: "percentage of male user",
+
+                        }
+                    ]
+
+                }
+
+                var myConfig3 = {
+                    "type": "bar",
+                    "background-color": "white",
+                    "title": {
+                        "text": "Average Daily Work Hours of female and male",
+                        "font-color": "#7E7E7E",
+                        "backgroundColor": "none",
+                        "font-size": "22px",
+                        "alpha": 1,
+                        "adjust-layout": true,
+                    },
+                    "legend": {
+                        "layout": "x3",
+                        "overflow": "page",
+                        "alpha": 0.05,
+                        "shadow": false,
+                        "align": "center",
+                        "adjust-layout": true,
+                        "marker": {
+                            "type": "circle",
+                            "border-color": "none",
+                            "size": "10px"
+                        }
+                    },
+                    "scale-y": {
+                        "item": {
+                            "font-color": "#7e7e7e"
+                        },
+                        "guide": {
+                            "visible": true
+                        },
+                        "label": {
+                            "text": "Hours",
+                            "font-family": "arial",
+                            "bold": true,
+                            "font-size": "14px",
+                            "font-color": "#7E7E7E",
+                        }
+                    },
+                    "plot": {
+                        "alpha": 0.7,
+                        "border-width": 2,
+                        "border-color": "black",
+                        "border-radius-top-left": 5,
+                        "border-radius-top-right": 5,
+                        "hoverState": {
+                            "backgroundColor": "#909090"
+                        }
+                    },
+                    "series": [female_work, male_work]
+                }
+
+                zingchart.render({
+                    id: 'myChart',
+                    data: myConfig,
+                    height: 400,
+                    width: '80%'
+                });
+                zingchart.render({
+                    id: 'myChart2',
+                    data: myConfig2,
+                    height: 400,
+                    width: '80%'
+                });
+                zingchart.render({
+                    id: 'myChart3',
+                    data: myConfig3,
+                    height: 400,
+                    width: '80%'
+                });
+            });
+        
+    </script>
+</body>
+
+</html>

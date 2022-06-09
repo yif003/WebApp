@@ -1,0 +1,19 @@
+.charts{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    width: 1400px;
+    margin: 0 auto;
+}
+
+.description{
+    padding: 20px;
+    font-size: 19px;
+    background-color: beige;
+    width: 700px;
+    margin: 0 auto;
+}
+#generate{
+    width: 200px;
+    margin: 0 auto;
+}

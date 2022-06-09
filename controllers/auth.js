@@ -41,22 +41,23 @@ exports.postLogin = (req, res, next) => {
         return res.redirect('/login');
       }
       const admin = user.admin;
+      
+      if(password === user.password){
+          return req.session.save(err => {
+          console.log(err);
+          res.redirect('/Nuser');
+          })}
+
       bcrypt
         .compare(password, user.password)
         .then(doMatch => {
           if (doMatch === true) {
             req.session.isLoggedIn = true;
             req.session.user = user;
-            if(admin){
+            if(admin === true){
               return req.session.save(err => {
                 console.log(err);
                 res.redirect('/admin');
-              });
-            }
-            else{
-                return req.session.save(err => {
-                console.log(err);
-                res.redirect('/Nuser');
               });
             }
           }

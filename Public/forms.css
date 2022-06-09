@@ -1,6 +1,10 @@
 body{
   font-size: 17px;
 }
+.note{
+  text-align: center;
+  font-size: 15px;
+}
 main{
   background-color: #FFFFFF;
   width: 400px;
