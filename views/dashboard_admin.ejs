@@ -71,10 +71,10 @@
                 let male_data = [];
                 
                 data.forEach(function (user, index) {
-                    if(user.sex === 'female'){
+                    if(user.sex === 'female' && user.HoursWorked.length != 0){
                         female_data.push(arr[index]);
                     }
-                    if(user.sex === 'male'){
+                    if(user.sex === 'male' && user.HoursWorked .length != 0){
                         male_data.push(arr[index]);
                     }
                 })

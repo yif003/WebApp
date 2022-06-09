@@ -25,7 +25,7 @@ Authentication:
 - the login and logout are implemented using express-session to record whether a user loged in.
     - admin user can only set up through sign up, normal user can be added by admin from usermanage.
     - bcrypt.js will hash passwords of admins.
-
+    
 Dashboard:
 
 - the application starts from app.js, and it imports all the packages required, connects to database, listen to local server at 3000.
@@ -41,5 +41,8 @@ Dashboard:
 Report:
 - any chart and grids are implmented using zinggrid and zingchart.
 - this project modelize employer and employees, and helps to track user information and manage users.
+- normal user dashboard chart : /views/dashboard_Normal.ejs
+- admin dashboard charts: /views/dashboard_admin.ejs
+- detailed report charts: /views/metricname.ejs
     
 
