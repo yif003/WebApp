@@ -14,7 +14,7 @@ example of normal user:
 - email; 456@2.com
 - password: 456
 
-This application is build on Node.j based on localhost server, npm and node are required, click https://nodejs.org/en/ to download node and restart machine, use the command below to run:
+This application is build on Node.j based on localhost server, npm and node are required, click https://nodejs.org/en/ to download node and restart machine, under the root directory of the project folder use the command below to run:
 
     npm start
 
