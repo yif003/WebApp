@@ -2,7 +2,6 @@
 
 Name: Yifu Fang
 
-Clarification: I can no longer ssh back to my server, I talked to TA and professor, and eventually granted to work on localhost server.
 
 http://localhost:3000/
 
